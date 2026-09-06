@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Including a joint to attach the lidar to the chassis -->
+    <joint name="laser_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="laser_frame" />
+        <origin xyz="0.09 0 0.02" rpy="0 0 0" />
+    </joint>
+
+    <!-- Including the physical properties of the lidar-->
+    <link name="laser_frame">
+        <visual>
+            <geometry>
+                <cylinder radius="0.03" length="0.01" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.03" length="0.01" />
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="0.01" radius="0.03">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!--  Including the gazebo configurations-->
+    <gazebo reference="laser_frame">
+        <sensor name="laser" type="gpu_lidar">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+
+            <topic>scan</topic>
+            <gz_frame_id>laser_frame</gz_frame_id>
+
+            <lidar>
+                <!--  The scanning parameters-->
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14</min_angle>
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.05</min>
+                    <max>12</max>
+                    <resolution>0.01</resolution>
+                </range>
+            </lidar>
+        </sensor>
+    </gazebo>
+
+</robot>
